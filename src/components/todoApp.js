@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Todo from "./todo";
 
+import "./todoApp.css";
+
 export default function TodoApp() {
     const [title, setTitle] = useState("hola");
     const [todos, setTodos] = useState([]);
@@ -22,18 +24,34 @@ export default function TodoApp() {
 
         const temp = [...todos] //Copia de array
         temp.unshift(newTodo);
+        setTodos(temp);
+
+        setTitle("");
+    }
+
+    function handleUpdate(id, value) {
+        const temp = [...todos];
+        const item = temp.find(item => item.id === id);
+        item.title = value;
+        setTodos(temp);
+    }
+
+    function handleDelete(id) {
+        const temp = todos.filter(item => item.id != id);
 
         setTodos(temp);
     }
 
+
     return (
         <div className="todoContainer">
+            <h3>Crea tu lista de tareas</h3>
             <form className="todoCreateForm" onSubmit={handleSubmit}>
                 <input onChange={handleChange} className="todoInput" value={title} />
                 <input
                     onClick={handleSubmit}
                     type="submit"
-                    value="Crear todo"
+                    value="Crear"
                     className="buttonCreate"
                 />
             </form>
@@ -41,7 +59,7 @@ export default function TodoApp() {
             <div className="todosContainer">
                 {
                     todos.map(item => (
-                    <Todo key={item.id} item={item}/>
+                        <Todo key={item.id} item={item} onUpdate={handleUpdate} onDelete={handleDelete} />
                     ))}
             </div>
 
